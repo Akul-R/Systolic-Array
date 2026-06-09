@@ -4,9 +4,11 @@ This is a short project to build on my existing RTL development and verification
 
 ## Introduction
 ![Systolic Array Architecture Grid](docs/SA_Diagram.png)
+
 Systolic arrays are frequently found in hardware accelerators for neural networks. They allow for acceleration of matrix operations such as multiplication or convolution which is essentially what neural networks are - a lot of matrix operations between the inputs, the weights and the biases. The core component of a systolic array is the Multiply ACcumulate (MAC) Unit. Each MAC unit in the array computes a partial result and hands it to the next unit in the grid resulting in a wave of data that cascades through the grid. 
 
 ![MAC Unit Design](docs/MAC_diagram.png)
+
 The MAC Unit is made up of a multiplier, an adder and a register to store the accumulated value. The accumulated value is added with the result of the multiplier. The MAC has 5 inputs, A, B, C, n_rst and clk and 1 output. Inputs A and B are inputs to the multiplier, clk is a clock signal to synchronise writing to the accumulation register, n_rst is an active low reset signal and C is a binary value that is written to the accumulation register when the reset signal is de-asserted. In the systolic array, the A input of the MAC corresponds to the inputs of the network (X0, X1 in the systolic array diagram), the B input of the MAC corresponds to the values within the weight matrix and C corresponds to the values of the bias matrix. In the systolic array, the C input is connected to the biases only on the top row of MAC units, all the other units can omit the C input entirely as it is not needed.
 
 ## Hardware Specifications/Features
