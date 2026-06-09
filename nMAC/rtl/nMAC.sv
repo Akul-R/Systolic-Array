@@ -1,6 +1,14 @@
 //N Bit Multiply Accumulate (MAC) Unit
-//Inputs: A[n-1:0], B[n-1:0]
+//Inputs: A[n-1:0], B[n-1:0], C[m-1:0]
 //Outputs: Q[m-1:0]
+
+/*  
+new input added: C which allows us to load a value into the accumulate reg when
+reset signal is asserted. In a convolution neural network, A could be the input
+activation, B could be the weight and C could be the bias. C input only used by 
+top row of MACs in a systolic array, the other units can omit this input (C 
+would be tied to 0 for them).
+*/
 
 module n_MAC #(
     parameter n = 4,
@@ -9,6 +17,7 @@ module n_MAC #(
 (
     input logic [n-1:0] A,
     input logic [n-1:0] B,
+    input logic [m-1:0] C,
     input logic clk,
     input logic n_rst,
     output logic [m-1:0] Q
@@ -45,7 +54,7 @@ module n_MAC #(
     //register to store accumulated value
     always_ff @(posedge clk) begin
         if(!n_rst)
-            accum <= '0;
+            accum <= C;
         else begin
             accum <= next_accum;
         end
