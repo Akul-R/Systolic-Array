@@ -9,16 +9,13 @@ Systolic arrays are frequently found in hardware accelerators for neural network
 
 ![MAC Unit Design](docs/MAC_diagram.png)
 
-The MAC Unit is made up of a multiplier, an adder and a register to store the accumulated value. The accumulated value is added with the result of the multiplier. The MAC has 5 inputs, A, B, C, n_rst and clk and 1 output. Inputs A and B are inputs to the multiplier, clk is a clock signal to synchronise writing to the accumulation register, n_rst is an active low reset signal and C is a binary value that is written to the accumulation register when the reset signal is de-asserted. In the systolic array, the A input of the MAC corresponds to the inputs of the network (X0, X1 in the systolic array diagram), the B input of the MAC corresponds to the values within the weight matrix and C corresponds to the values of the bias matrix. In the systolic array, the C input is connected to the biases only on the top row of MAC units, all the other units can omit the C input entirely as it is not needed.
+The MAC Unit is made up of a multiplier, an adder and a register to store the accumulated value. The MAC has 5 inputs: X, W, B, clk and n_rst. X and W are inputs to the multiplier, B is the partial sum computed by previous MAC units (or the bias values for the top row of MACs), clk and n_rst are for the clock signal and an active low reset.
 
 ## Hardware Specifications/Features
 1. Fully Parameterisable Design:
    All modules in the design are parameterisable. The MAC module allows for size of inputs (n) and size of accumulation register (m) to be specified to prevent overflowing after consecutive Multiply and
    Accumulate operations
-3. Synthesizer Optimised:
-   The C input is only specified for the top row of MAC units in the systolic array, all other MAC units have their C inputs connected to zero. The synthesise tool will optimise these units to remove unnecessary
-   multiplexer logic. On a chip, this would allow for better space optimisation.
-5. Synchronous Active-Low Reset:
+2. Synchronous Active-Low Reset:
    A synchronous active-low reset allows for noise immunity. The reset signal also allows for a binary value from the C input of the MAC to be loaded into the accumulate register which is how the systolic array
    is able to add biases.
 
