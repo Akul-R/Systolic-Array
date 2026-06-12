@@ -3,11 +3,11 @@
 //Outputs: Q[m-1:0]
 
 /*  
-new input added: C which allows us to load a value into the accumulate reg when
-reset signal is asserted. In a convolution neural network, A could be the input
-activation, B could be the weight and C could be the bias. C input only used by 
-top row of MACs in a systolic array, the other units can omit this input (C 
-would be tied to 0 for them).
+Architecture change: Originally, this MAC was self accumulating meaning there was no way
+to actually pass partial sums down in the systolic array. To solve this, the C input will
+be the 2nd input of the Adder and it will either have the bias matrix values or the partial
+sum from the previous MAC's Accumulation Register. Originally the second input of the adder
+was the accumulation register output which made it self accumulating.
 */
 
 module n_MAC #(
@@ -44,7 +44,7 @@ module n_MAC #(
     n_adder #(
         .n(m)
     ) a0 (
-        .A(accum),
+        .A(C),
         .B(pad_mult_output),
         .Q(next_accum),
         .CIN(1'b0),
