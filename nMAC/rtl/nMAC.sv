@@ -54,7 +54,7 @@ module n_MAC #(
     //register to store accumulated value
     always_ff @(posedge clk) begin
         if(!n_rst)
-            accum <= C;
+            accum <= '0;
         else begin
             accum <= next_accum;
         end

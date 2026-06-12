@@ -14,6 +14,7 @@ module nMAC_tb();
     //Inputs
     logic [n-1:0] A;
     logic [n-1:0] B;
+    logic [m-1:0] C;
     logic clk;
     logic n_rst;
 
@@ -43,6 +44,7 @@ module nMAC_tb();
 
     initial begin
         n_rst = 0; A = 0; B = 0;
+        assign C = Q;
 
         $display("%0d BIT MAC UNIT TEST", n);
         $display("----------------------------------------------------------------");
