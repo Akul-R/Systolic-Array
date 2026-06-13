@@ -56,7 +56,7 @@ module n_systolicArray #(
 
 
     generate
-        genvar i, j;
+        genvar j;
 
         for(i = 0; i < rows; i++) begin
             for(j = 0; j < cols; j++) begin
