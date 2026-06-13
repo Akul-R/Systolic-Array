@@ -1,6 +1,6 @@
 # Systolic-Array Project
 ## Aims
-This is a short project to build on my existing RTL development and verification skills. The aim is to make a parameterisable systolic array with a hierarchal design. In the future, I would also like to put the RTL onto an FPGA and write a program on my computer that allows me to send matrices to the FPGA for it to compute and then return the value.
+This is a short project to build on my existing RTL development and verification skills. The aim is to make a parameterisable systolic array with a hierarchal design. I will use the designs from this project in future projects
 
 ## Introduction
 ![Systolic Array Architecture Grid](docs/SA_Diagram.png)
@@ -13,16 +13,16 @@ The MAC Unit is made up of a multiplier, an adder and a register to store the ac
 
 ## Hardware Specifications/Features
 1. Fully Parameterisable Design:
-   All modules in the design are parameterisable. The MAC module allows for size of inputs (n) and size of accumulation register (m) to be specified to prevent overflowing after consecutive Multiply and
-   Accumulate operations
+   All modules in the design are parameterisable. The Systolic Array module allows for full control over the input bit size, the size of the grid of MACs and output bit sizes.
 2. Synchronous Active-Low Reset:
-   A synchronous active-low reset allows for noise immunity. The reset signal also allows for a binary value from the C input of the MAC to be loaded into the accumulate register which is how the systolic array
-   is able to add biases.
+   A synchronous active-low reset allows for noise immunity.
 
 ## Verification Strategy:
 The verification strategy involved creating self checking test benches for each module. All verification was done using ModelSim. The first phase of the test bench checks for corner cases (for example, testing the maximum limits to ensure adder and multipliers can handle such inputs correctly). The second phase of the test bench performs constrained random testing by using $urandom to generate 100s of random vectors to ensure the answers remain consistent.
 A multi tiered nested test bench was created to test the MAC Unit. The unit is made to perform M calculations consecutively before resetting and performing another set of M calculations. This test is repeated N times and the accumulated result is verified throughout the test. This test was to simulate what the unit would be doing if it were performing actual matrix operations.
+Similarly, to test the Systolic Array, a nested test bench was used where the test bench would generate a random set of inputs, calculate the expected values itself and then wait until the results (Y) are outputted from the array. This process is repeated multiple times each with random inputs.
 
 ## Future Expansion:
-I plan to create a GUI based app on python that allows the user to input matrices and a desired operation on the matrices and send it via UART to an FPGA running the systolic array. The FPGA then computes the result of the operation and sends it back to the user's computer where the GUI updates with the calculated result.
+Currently, the testbench for the systolic array uses static weight and bias matrices. I will update this at some point to use random weight/bias matrices or to load matrices from an external file.
+But the main aim of this project has been fulfilled, I plan to use these modules in a future project where I will attempt to design a control and memory unit for the systolic array.
 
