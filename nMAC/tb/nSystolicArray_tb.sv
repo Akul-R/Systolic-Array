@@ -17,7 +17,7 @@ module nSystolic_tb();
     parameter n = 4;
     parameter m = 12;
     parameter rows = 4;
-    parameter cols = 4;
+    parameter cols = 5;
     parameter tests = 500;
 
     //inputs
@@ -29,6 +29,8 @@ module nSystolic_tb();
 
     //outputs
     logic [m-1:0] Y [cols-1:0];
+
+    `include "printmat.sv"
 
     //instantiate systolic array
     n_systolicArray #(
@@ -53,7 +55,7 @@ module nSystolic_tb();
         int fails;
         int clock_count;
         logic [m-1:0] expected_ans [cols-1:0];
-        
+
         correct = 0;
         incorrect = 0;
 
@@ -62,13 +64,13 @@ module nSystolic_tb();
         //for easier debugging, weight values are equal to column number + 1
         for(int i = 0; i < rows; i++) begin
             for(int j = 0; j < cols; j++) begin
-                W[i][j] = j+1;
+                W[i][j] = $urandom;
             end
         end
 
         //for easier debugging, bias values are all set to constant (3)
         for(int j = 0; j < cols; j++) begin
-            B[j] = 3;
+            B[j] = $urandom_range(0, 100);
         end
 
         //----------------------------------------------------------------------------------
@@ -118,6 +120,10 @@ module nSystolic_tb();
                     fails++;
                     $display("[FAIL] | TEST: %4d | EXPECTED: %5d | GOT: %5d", test, expected_ans[j], Y[j]);
                 end
+            end
+
+            if(test%100 == 0) begin
+                print_mat(test);
             end
 
             if(fails > 0) begin
