@@ -10,6 +10,42 @@ task automatic print_mat(int test);
     else
         maxrows = cols;
 
+    for(int i = 0; i < rows; i++) begin
+        if(i == rows/2)
+            $write("INPUT(X)");
+        else
+            $write("    ");
+    end
+
+    $write("   * ");
+
+    for(int i = 0; i < cols; i++) begin
+        if(i == rows/2)
+            $write("WEIGHTS(W)");
+        else
+            $write("    ");
+    end
+
+    $write("  + ");
+
+    for(int i = 0; i < cols; i++) begin
+        if(i == rows/2)
+            $write("BIAS(B)");
+        else
+            $write("     ");
+    end
+
+    $write(" = ");
+
+    for(int i = 0; i < cols; i++) begin
+        if(i == rows/2)
+            $write("OUTPUT(Y)");
+        else
+            $write("     ");
+    end
+
+    $write("\n\n");
+
     for(int i = 0; i < maxrows; i++) begin
         //print X
         if(i == halfway-1) begin
