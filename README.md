@@ -5,7 +5,9 @@ This is a short project to build on my existing RTL development and verification
 ## Introduction
 ![Systolic Array Architecture Grid](docs/SA_Diagram.png)
 
-Systolic arrays are frequently found in hardware accelerators for neural networks. They allow for acceleration of matrix operations such as multiplication or convolution which is essentially what neural networks are - a lot of matrix operations between the inputs, the weights and the biases. The core component of a systolic array is the Multiply ACcumulate (MAC) Unit. Each MAC unit in the array computes a partial result and hands it to the next unit in the grid resulting in a wave of data that cascades through the grid. 
+Systolic arrays are frequently found in hardware accelerators for neural networks. They allow for acceleration of matrix operations such as multiplication or convolution which is essentially what neural networks are - a lot of matrix operations between the inputs, the weights and the biases. The core component of a systolic array is the Multiply ACcumulate (MAC) Unit. Each MAC unit in the array computes a partial result and hands it to the next unit in the grid resulting in a wave of data that cascades through the grid.
+
+One thing to note is that the input Matrix is transposed before being entered into the systolic array. Standard matrix multiplication would require the input to be a row vector for the output to also be a row vector but the horizontal row vector is mapped to a vertical column vector in the diagram of the systolic array. This spatial transposition allows the utilisation of all rows in the grid and so maximises parallelism.
 
 ![MAC Unit Design](docs/MAC_diagram.png)
 
@@ -18,11 +20,10 @@ The MAC Unit is made up of a multiplier, an adder and a register to store the ac
    A synchronous active-low reset allows for noise immunity.
 
 ## Verification Strategy:
-The verification strategy involved creating self checking test benches for each module. All verification was done using ModelSim. The first phase of the test bench checks for corner cases (for example, testing the maximum limits to ensure adder and multipliers can handle such inputs correctly). The second phase of the test bench performs constrained random testing by using $urandom to generate 100s of random vectors to ensure the answers remain consistent.
-A multi tiered nested test bench was created to test the MAC Unit. The unit is made to perform M calculations consecutively before resetting and performing another set of M calculations. This test is repeated N times and the accumulated result is verified throughout the test. This test was to simulate what the unit would be doing if it were performing actual matrix operations.
-Similarly, to test the Systolic Array, a nested test bench was used where the test bench would generate a random set of inputs, calculate the expected values itself and then wait until the results (Y) are outputted from the array. This process is repeated multiple times each with random inputs.
+A self checking testbench was created for each module. This allowed for easy verification without having to analyse waveforms. For the final systolic array, the test bench computes the operation itself first and then compares it with the result the systolic array mnodule got. A seperate helper function was added that prints the matrix out in proper form to allow for quick paper verification to make sure the test bench was actually computing the values correctly. Below, you can see a snippet of the test bench output.
+
+![Test Bench Output](docs/tb_output.png)
 
 ## Future Expansion:
-Currently, the testbench for the systolic array uses static weight and bias matrices. I will update this at some point to use random weight/bias matrices or to load matrices from an external file.
-But the main aim of this project has been fulfilled, I plan to use these modules in a future project where I will attempt to design a control and memory unit for the systolic array.
+The Main aim of this project has been completed. I will be using these modules in future projects where I build upon this by adding control units and memory buffers to be able to load in weights and biases.
 
