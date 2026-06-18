@@ -1,3 +1,6 @@
+//Helper Function for the systolic array test bench
+//------------DO NOT COMPILE THIS FILE----------------
+
 task automatic print_mat(int test);
     int halfway = rows / 2;
     int maxrows;
